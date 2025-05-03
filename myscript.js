@@ -1,108 +1,43 @@
-(() => {
-  const fileInput = document.getElementById('fileInput');
-  const previewImage = document.getElementById('previewImage');
-  const previewVideo = document.getElementById('previewVideo');
-  const upgradedCanvas = document.getElementById('upgradedCanvas');
-  const upgradeBtn = document.getElementById('upgradeBtn');
-  const downloadBtn = document.getElementById('downloadBtn');
-  const resultText = document.getElementById('resultText');
+ upscaleBtn.addEventListener('click', async () => {
+      if (!currentFile) return;
+      upscaleBtn.disabled = true;
+      loadingText.style.display = 'block';
+      enhancedImage.src = '';
+      downloadBtn.style.display = 'none';
 
-  let currentFile = null;
-  let currentType = null; // 'image' or 'video'
+      try {
+        const img = new Image();
+        const originalUrl = URL.createObjectURL(currentFile);
+        img.src = originalUrl;
 
-  function resetPreview() {
-    previewImage.style.display = 'none';
-    previewImage.src = '';
-    previewVideo.style.display = 'none';
-    previewVideo.src = '';
-    upgradedCanvas.style.display = 'none';
-    const ctx = upgradedCanvas.getContext('2d');
-    ctx.clearRect(0, 0, upgradedCanvas.width, upgradedCanvas.height);
-    resultText.textContent = '';
-    upgradeBtn.disabled = true;
-    downloadBtn.style.display = 'none'; // Hide download button
-  }
+        await new Promise((resolve, reject) => {
+          img.onload = () => {
+            URL.revokeObjectURL(originalUrl); // Clean up
+            resolve();
+          };
+          img.onerror = reject;
+        });
 
-  function displayImage(file) {
-    const url = URL.createObjectURL(file);
-    previewImage.src = url;
-    previewImage.style.display = 'block';
-    previewVideo.style.display = 'none';
-    upgradedCanvas.style.display = 'none';
-    upgradeBtn.disabled = false;
-    resultText.textContent = '';
-  }
+        // Use window.Upscaler to refer to the class correctly
+        const upscaler = new window.Upscaler({
+          scale: 4,
+          model: 'esrgan',
+        });
 
-  function displayVideo(file) {
-    const url = URL.createObjectURL(file);
-    previewVideo.src = url;
-    previewVideo.style.display = 'block';
-    previewVideo.load();
-    previewImage.style.display = 'none';
-    upgradedCanvas.style.display = 'none';
-    upgradeBtn.disabled = false;
-    resultText.textContent = '';
-  }
+        const output = await upscaler.upscale(img);
+        const blob = await new Promise(resolve => output.canvas.toBlob(resolve, 'image/png'));
 
-  function upscaleImage(img, scaleFactor = 2) {
-    const canvas = upgradedCanvas;
-    const ctx = canvas.getContext('2d');
-    canvas.width = img.naturalWidth * scaleFactor;
-    canvas.height = img.naturalHeight * scaleFactor;
+        if (upscaledBlobUrl) {
+          URL.revokeObjectURL(upscaledBlobUrl);
+        }
+        upscaledBlobUrl = URL.createObjectURL(blob);
+        enhancedImage.src = upscaledBlobUrl;
 
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
-
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    canvas.style.display = 'block';
-    
-    // Show download button
-    downloadBtn.style.display = 'block';
-    downloadBtn.onclick = () => {
-      const link = document.createElement('a');
-      link.href = upgradedCanvas.toDataURL('image/png');
-      link.download = 'upgraded-image.png'; // Set the default file name
-      link.click();
-    };
-  }
-
-  function simulateVideoUpgrade() {
-    upgradedCanvas.style.display = 'none';
-    resultText.textContent = 'Video resolution upscaling is a complex task and requires backend processing. This tool simulates the upgrade visually by playing the video full size.';
-    downloadBtn.style.display = 'none'; // Hide download button for video
-  }
-
-  fileInput.addEventListener('change', (e) => {
-    resetPreview();
-    const file = e.target.files[0];
-    if (!file) {
-      currentFile = null;
-      currentType = null;
-      return;
-    }
-    currentFile = file;
-    if (file.type.startsWith('image/')) {
-      currentType = 'image';
-      displayImage(file);
-    } else if (file.type.startsWith('video/')) {
-      currentType = 'video';
-      displayVideo(file);
-    } else {
-      currentType = null;
-      resultText.textContent = 'Unsupported file type. Please upload an image or video.';
-      upgradeBtn.disabled = true;
-    }
-  });
-
-  upgradeBtn.addEventListener('click', () => {
-    if (!currentFile) return;
-    if (currentType === 'image') {
-      const img = new Image();
-      img.onload = () => {
-        upscaleImage(img);
-        resultText.textContent = 'Resolution upgraded by 2x (simulated using canvas).';
-      };
-      img.onerror = () => {
-        resultText.textContent = 'Failed to load the image for processing.';
-      };
-      img.src = URL.create
+        downloadBtn.style.display = 'block';
+        loadingText.style.display = 'none';
+      } catch (error) {
+        loadingText.style.display = 'none';
+        upscaleBtn.disabled = false;
+        alert('Error during upscaling: ' + error.message);
+      }
+    });
