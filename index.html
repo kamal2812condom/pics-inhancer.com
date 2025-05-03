@@ -1,126 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Photo Quality Enhancer - Upscale x4</title>
-  <style>
-    /* (Style unchanged) */
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>4K Photo Upscaler</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 15px;
+    min-height: 600px;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  h1 {
+    margin-bottom: 5px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.8rem;
+  }
+  p.description {
+    font-weight: 400;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #d0cde1cc;
+  }
+  .upload-section {
+    width: 100%;
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    user-select: none;
+  }
+  input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    background: #fff;
+    color: #333;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+  }
+  input[type="file"]::-webkit-file-upload-button {
+    cursor: pointer;
+    background: #764ba2;
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background 0.3s ease;
+  }
+  input[type="file"]::-webkit-file-upload-button:hover {
+    background: #5a3677;
+  }
+  #result-section {
+    margin-top: 25px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+  }
+  #original-image, #upscaled-image {
+    max-width: 100%;
+    max-height: 280px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  }
+  button#download-btn {
+    background: #667eea;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(102,126,234,0.6);
+    transition: background 0.3s ease;
+    margin-bottom: 10px;
+  }
+  button#download-btn:hover {
+    background: #5469d4;
+  }
+  footer {
+    margin-top: auto;
+    font-size: 0.7rem;
+    color: #c3bbf0cc;
+    text-align: center;
+    padding: 5px 10px;
+  }
+  @media (max-width: 400px) {
+    body {
+      max-width: 100vw;
+      padding: 10px;
+    }
+    #original-image, #upscaled-image {
+      max-height: 220px;
+    }
+  }
+</style>
 </head>
 <body>
-  <h1>Photo Quality Enhancer</h1>
-  <p>Upload your photo and enhance quality up to 4x with AI-powered upscaling</p>
-  <div class="container">
-    <input type="file" accept="image/*" id="fileInput" />
-    <button id="upscaleBtn" disabled>Enhance Quality ×4</button>
-    <div class="loading" id="loading" style="display:none;">Enhancing image, please wait...</div>
-    <div class="images-wrapper" style="display:none;" id="imagesWrapper">
-      <div class="image-container">
-        <h2>Original Image</h2>
-        <img id="originalImage" alt="Original preview" />
-      </div>
-      <div class="image-container">
-        <h2>Enhanced Image</h2>
-        <img id="enhancedImage" alt="Enhanced preview" />
-        <button class="download-btn" id="downloadBtn" style="display:none;">Download Enhanced</button>
-      </div>
-    </div>
-  </div>
-  <div class="footer">
-    &copy; 2024 Photo Quality Enhancer - Powered by UpscalerJS and TensorFlow.js
+  <h1>4K Photo Upscaler</h1>
+  <p class="description">Upload a photo and upscale it up to 4K resolution right in your browser.</p>
+  <div class="upload-section">
+    <input type="file" id="upload-input" accept="image/*" />
   </div>
 
-  <!-- Load the UpscalerJS script first -->
-  <script src="js/upscaler.min.js"></script>
+  <div id="result-section">
+    <img id="original-image" alt="Original uploaded image" />
+    <canvas id="canvas" style="display:none;"></canvas>
+    <img id="upscaled-image" alt="Upscaled image" />
+    <button id="download-btn" title="Download upscaled image">Download 4K Image</button>
+  </div>
 
-  <!-- Custom JavaScript -->
-  <script>
-    // Check if Upscaler is loaded
-    if (typeof window.Upscaler === "undefined") {
-      alert("Error: UpscalerJS library failed to load.");
+  <footer>Made with ⚡ in browser &nbsp; | &nbsp; Images stay private & never leave your device</footer>
+
+<script>
+  const uploadInput = document.getElementById('upload-input');
+  const originalImage = document.getElementById('original-image');
+  const upscaledImage = document.getElementById('upscaled-image');
+  const resultSection = document.getElementById('result-section');
+  const downloadBtn = document.getElementById('download-btn');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+
+  // Max 4K resolution dimensions
+  const maxWidth = 3840;
+  const maxHeight = 2160;
+
+  function calculateUpscaleDimensions(width, height) {
+    // Calculate the upscale dimension preserving aspect ratio but max 4k
+    let targetWidth = width;
+    let targetHeight = height;
+
+    if (width <= maxWidth && height <= maxHeight) {
+      // If image is smaller than 4k, upscale to max dimension while keeping aspect ratio
+      const widthRatio = maxWidth / width;
+      const heightRatio = maxHeight / height;
+      const scale = Math.min(widthRatio, heightRatio);
+      targetWidth = Math.round(width * scale);
+      targetHeight = Math.round(height * scale);
     } else {
-      console.log("UpscalerJS loaded successfully");
+      // If larger, just limit to 4k max while maintaining aspect ratio
+      const widthRatio = maxWidth / width;
+      const heightRatio = maxHeight / height;
+      const scale = Math.min(widthRatio, heightRatio);
+      targetWidth = Math.round(width * scale);
+      targetHeight = Math.round(height * scale);
+    }
+    return { targetWidth, targetHeight };
+  }
+
+  function upscaleImage(image) {
+    const { targetWidth, targetHeight } = calculateUpscaleDimensions(image.naturalWidth, image.naturalHeight);
+
+    // Set canvas size to target dimension
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+
+    // Use a trick for better quality: multiple scaling steps
+    // But here for simplicity, upscale directly with ctx.drawImage
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    ctx.clearRect(0, 0, targetWidth, targetHeight);
+    ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
+
+    // Convert canvas back to image URL
+    const upscaledURL = canvas.toDataURL('image/png');
+
+    return upscaledURL;
+  }
+
+  uploadInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload a valid image file.');
+      return;
     }
 
-    const fileInput = document.getElementById('fileInput');
-    const upscaleBtn = document.getElementById('upscaleBtn');
-    const originalImage = document.getElementById('originalImage');
-    const enhancedImage = document.getElementById('enhancedImage');
-    const imagesWrapper = document.getElementById('imagesWrapper');
-    const loadingText = document.getElementById('loading');
-    const downloadBtn = document.getElementById('downloadBtn');
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      originalImage.src = e.target.result;
+      originalImage.onload = () => {
+        // After original image loads, upscale it
+        const upscaledDataURL = upscaleImage(originalImage);
+        upscaledImage.src = upscaledDataURL;
 
-    let currentFile = null;
-    let upscaledBlobUrl = null;
+        resultSection.style.display = 'flex';
+        downloadBtn.disabled = false;
+      };
+    };
+    reader.readAsDataURL(file);
+  });
 
-    fileInput.addEventListener('change', () => {
-      const file = fileInput.files[0];
-      if (!file || !file.type.startsWith('image/')) {
-        upscaleBtn.disabled = true;
-        imagesWrapper.style.display = 'none';
-        return;
-      }
-      currentFile = file;
-      const url = URL.createObjectURL(file);
-      originalImage.src = url;
-      imagesWrapper.style.display = 'flex';
-      enhancedImage.src = '';
-      downloadBtn.style.display = 'none';
-      upscaleBtn.disabled = false;
-    });
-
-    upscaleBtn.addEventListener('click', async () => {
-      if (!currentFile) return;
-      upscaleBtn.disabled = true;
-      loadingText.style.display = 'block';
-      enhancedImage.src = '';
-      downloadBtn.style.display = 'none';
-
-      try {
-        const img = new Image();
-        const originalUrl = URL.createObjectURL(currentFile);
-        img.src = originalUrl;
-
-        await new Promise((resolve, reject) => {
-          img.onload = () => {
-            URL.revokeObjectURL(originalUrl); // Clean up
-            resolve();
-          };
-          img.onerror = reject;
-        });
-
-        // Initialize the Upscaler using the correct method
-        const upscaler = new Upscaler({
-          scale: 4,  // x4 upscale
-          model: 'esrgan',  // or try 'basic' depending on the available models
-        });
-
-        const output = await upscaler.upscale(img);
-        const blob = await new Promise(resolve => output.canvas.toBlob(resolve, 'image/png'));
-
-        if (upscaledBlobUrl) {
-          URL.revokeObjectURL(upscaledBlobUrl);
-        }
-        upscaledBlobUrl = URL.createObjectURL(blob);
-        enhancedImage.src = upscaledBlobUrl;
-
-        downloadBtn.style.display = 'block';
-        loadingText.style.display = 'none';
-      } catch (error) {
-        loadingText.style.display = 'none';
-        upscaleBtn.disabled = false;
-        alert('Error during upscaling: ' + error.message);
-      }
-    });
-
-    downloadBtn.addEventListener('click', () => {
-      if (!upscaledBlobUrl) return;
-      const a = document.createElement('a');
-      a.href = upscaledBlobUrl;
-      a.download = 'enhanced-image.png';
-      a.click();
-    });
-  </script>
+  downloadBtn.addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.href = upscaledImage.src;
+    link.download = 'upscaled-4k.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+</script>
 </body>
 </html>
