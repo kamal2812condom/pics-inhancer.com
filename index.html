@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Photo Quality Enhancer - Upscale x4</title>
   <style>
-    /* (Style unchanged — same as before) */
+    /* (Same styles as before) */
     * {
       box-sizing: border-box;
     }
@@ -140,6 +140,9 @@
   <script src="https://cdn.jsdelivr.net/npm/upscaler@2.1.0/dist/umd/upscaler.min.js"></script>
 
   <script>
+    // Check if the Upscaler class is available globally
+    console.log(window.Upscaler);  // This should output the function or class
+
     const fileInput = document.getElementById('fileInput');
     const upscaleBtn = document.getElementById('upscaleBtn');
     const originalImage = document.getElementById('originalImage');
@@ -187,7 +190,13 @@
           img.onerror = reject;
         });
 
-        const upscaler = new Upscaler({
+        // Check if window.Upscaler is available before using it
+        if (typeof window.Upscaler === "undefined") {
+          throw new Error('Upscaler is not loaded properly.');
+        }
+
+        // Now, instantiate the Upscaler class correctly
+        const upscaler = new window.Upscaler({
           scale: 4,
           model: 'esrgan',
         });
