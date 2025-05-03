@@ -136,12 +136,16 @@
     &copy; 2024 Photo Quality Enhancer - Powered by UpscalerJS and TensorFlow.js
   </div>
 
-  <!-- ✅ Correct UMD build that exposes `Upscaler` to window -->
-  <script src="https://cdn.jsdelivr.net/npm/upscaler@2.1.0/dist/umd/upscaler.min.js"></script>
+  <!-- Alternative CDN for UpscalerJS -->
+  <script src="https://unpkg.com/upscaler@2.1.0/dist/umd/upscaler.min.js"></script>
 
   <script>
-    // Check if the Upscaler class is available globally
-    console.log(window.Upscaler);  // This should output the function or class
+    // Check if Upscaler is loaded
+    if (typeof window.Upscaler === "undefined") {
+      alert("Error: UpscalerJS library failed to load.");
+    } else {
+      console.log("UpscalerJS loaded successfully");
+    }
 
     const fileInput = document.getElementById('fileInput');
     const upscaleBtn = document.getElementById('upscaleBtn');
@@ -190,12 +194,6 @@
           img.onerror = reject;
         });
 
-        // Check if window.Upscaler is available before using it
-        if (typeof window.Upscaler === "undefined") {
-          throw new Error('Upscaler is not loaded properly.');
-        }
-
-        // Now, instantiate the Upscaler class correctly
         const upscaler = new window.Upscaler({
           scale: 4,
           model: 'esrgan',
