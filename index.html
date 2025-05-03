@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Photo Quality Enhancer - Upscale x4</title>
   <style>
-    /* (Same styles as before) */
+    /* Same styles as before */
     * {
       box-sizing: border-box;
     }
@@ -136,8 +136,8 @@
     &copy; 2024 Photo Quality Enhancer - Powered by UpscalerJS and TensorFlow.js
   </div>
 
-  <!-- Alternative CDN for UpscalerJS -->
-  <script src="https://unpkg.com/upscaler@2.1.0/dist/umd/upscaler.min.js"></script>
+  <!-- Include the Upscaler library -->
+  <script src="https://cdn.jsdelivr.net/npm/upscaler@2.1.0/dist/umd/upscaler.min.js"></script>
 
   <script>
     // Check if Upscaler is loaded
@@ -194,9 +194,10 @@
           img.onerror = reject;
         });
 
-        const upscaler = new window.Upscaler({
-          scale: 4,
-          model: 'esrgan',
+        // Initialize the Upscaler using the correct method
+        const upscaler = new Upscaler({
+          scale: 4,  // x4 upscale
+          model: 'esrgan',  // or try 'basic' depending on the available models
         });
 
         const output = await upscaler.upscale(img);
