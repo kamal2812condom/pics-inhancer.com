@@ -106,7 +106,3 @@
         resultText.textContent = 'Failed to load the image for processing.';
       };
       img.src = URL.create
-const upscaler = new Upscaler({
-  scale: 4,
-  model: 'esrgan',
-});

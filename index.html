@@ -1,117 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>Photo Quality Enhancer - Upscale x4</title>
-<style>
-  /* Reset and base */
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #121212;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    padding: 1rem;
-  }
-  h1 {
-    margin: 0 0 0.5rem 0;
-    font-weight: 700;
-  }
-  p {
-    margin: 0 0 2rem 0;
-    color: #ccc;
-  }
-  .container {
-    width: 100%;
-    max-width: 350px;
-    background: #1e1e1e;
-    padding: 1rem;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.7);
-  }
-  input[type="file"] {
-    width: 100%;
-    margin-bottom: 1rem;
-    cursor: pointer;
-    background: #2a2a2a;
-    border: none;
-    color: #eee;
-    padding: 0.5rem;
-    border-radius: 6px;
-  }
-  button {
-    width: 100%;
-    background: #0f62fe;
-    border: none;
-    color: white;
-    padding: 0.75rem;
-    font-size: 1rem;
-    font-weight: 600;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-bottom: 1rem;
-  }
-  button:disabled {
-    background: #555;
-    cursor: not-allowed;
-  }
-  button:hover:not(:disabled) {
-    background: #0353e9;
-  }
-  .images-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  @media (min-width: 480px) {
-    .images-wrapper {
-      flex-direction: row;
-      justify-content: space-between;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Photo Quality Enhancer - Upscale x4</title>
+  <style>
+    /* (Style unchanged — same as before) */
+    * {
+      box-sizing: border-box;
     }
-  }
-  .image-container {
-    flex: 1;
-    text-align: center;
-  }
-  .image-container > h2 {
-    font-weight: 600;
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-    color: #f0f0f0;
-  }
-  img {
-    width: 100%;
-    max-height: 300px;
-    object-fit: contain;
-    border-radius: 10px;
-    background: #333;
-  }
-  .download-btn {
-    background: #00b894;
-    margin-top: 0.5rem;
-  }
-  .footer {
-    margin-top: 2rem;
-    font-size: 0.8rem;
-    color: #555;
-    text-align: center;
-    max-width: 350px;
-  }
-  .loading {
-    text-align: center;
-    margin-bottom: 1rem;
-    font-size: 1rem;
-    color: #0f62fe;
-  }
-</style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #121212;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    h1 {
+      margin: 0 0 0.5rem 0;
+      font-weight: 700;
+    }
+    p {
+      margin: 0 0 2rem 0;
+      color: #ccc;
+    }
+    .container {
+      width: 100%;
+      max-width: 350px;
+      background: #1e1e1e;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.7);
+    }
+    input[type="file"] {
+      width: 100%;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      background: #2a2a2a;
+      border: none;
+      color: #eee;
+      padding: 0.5rem;
+      border-radius: 6px;
+    }
+    button {
+      width: 100%;
+      background: #0f62fe;
+      border: none;
+      color: white;
+      padding: 0.75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-bottom: 1rem;
+    }
+    button:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+    button:hover:not(:disabled) {
+      background: #0353e9;
+    }
+    .images-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    @media (min-width: 480px) {
+      .images-wrapper {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+    .image-container {
+      flex: 1;
+      text-align: center;
+    }
+    .image-container > h2 {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #f0f0f0;
+    }
+    img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: contain;
+      border-radius: 10px;
+      background: #333;
+    }
+    .download-btn {
+      background: #00b894;
+      margin-top: 0.5rem;
+    }
+    .footer {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: #555;
+      text-align: center;
+      max-width: 350px;
+    }
+    .loading {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      color: #0f62fe;
+    }
+  </style>
 </head>
 <body>
   <h1>Photo Quality Enhancer</h1>
@@ -136,8 +136,9 @@
     &copy; 2024 Photo Quality Enhancer - Powered by UpscalerJS and TensorFlow.js
   </div>
 
-  <!-- UpscalerJS CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/upscaler@2.1.0/dist/upscaler.min.js"></script>
+  <!-- ✅ Correct UMD build that exposes `Upscaler` to window -->
+  <script src="https://cdn.jsdelivr.net/npm/upscaler@2.1.0/dist/umd/upscaler.min.js"></script>
+
   <script>
     const fileInput = document.getElementById('fileInput');
     const upscaleBtn = document.getElementById('upscaleBtn');
@@ -150,10 +151,9 @@
     let currentFile = null;
     let upscaledBlobUrl = null;
 
-    // Handle file input
     fileInput.addEventListener('change', () => {
       const file = fileInput.files[0];
-      if (!file) {
+      if (!file || !file.type.startsWith('image/')) {
         upscaleBtn.disabled = true;
         imagesWrapper.style.display = 'none';
         return;
@@ -167,7 +167,6 @@
       upscaleBtn.disabled = false;
     });
 
-    // Handle upscale
     upscaleBtn.addEventListener('click', async () => {
       if (!currentFile) return;
       upscaleBtn.disabled = true;
@@ -176,25 +175,24 @@
       downloadBtn.style.display = 'none';
 
       try {
-        // Load image to Image element
         const img = new Image();
-        img.src = URL.createObjectURL(currentFile);
+        const originalUrl = URL.createObjectURL(currentFile);
+        img.src = originalUrl;
 
         await new Promise((resolve, reject) => {
-          img.onload = resolve;
+          img.onload = () => {
+            URL.revokeObjectURL(originalUrl); // Clean up
+            resolve();
+          };
           img.onerror = reject;
         });
 
-        // Create an Upscaler instance with x4 scale
-        const upscaler = new window.Upscaler({
+        const upscaler = new Upscaler({
           scale: 4,
-          model: 'esrgan', // Use ESRGAN model for best results
+          model: 'esrgan',
         });
 
-        // Run upscaling
         const output = await upscaler.upscale(img);
-
-        // Convert canvas output to blob
         const blob = await new Promise(resolve => output.canvas.toBlob(resolve, 'image/png'));
 
         if (upscaledBlobUrl) {
@@ -203,7 +201,6 @@
         upscaledBlobUrl = URL.createObjectURL(blob);
         enhancedImage.src = upscaledBlobUrl;
 
-        // Show download button
         downloadBtn.style.display = 'block';
         loadingText.style.display = 'none';
       } catch (error) {
@@ -213,7 +210,6 @@
       }
     });
 
-    // Download enhanced image
     downloadBtn.addEventListener('click', () => {
       if (!upscaledBlobUrl) return;
       const a = document.createElement('a');
@@ -221,10 +217,6 @@
       a.download = 'enhanced-image.png';
       a.click();
     });
-
   </script>
 </body>
 </html>
-<script src="https://cdn.jsdelivr.net/npm/upscaler@2.1.0/dist/upscaler.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/upscaler@2.1.0/dist/umd/upscaler.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/upscaler@2.1.0/dist/umd/upscaler.min.js"></script>
