@@ -2,331 +2,226 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<title>Photo & Video Resolution Upgrader</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Photo Quality Enhancer - Upscale x4</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
-
+  /* Reset and base */
   * {
     box-sizing: border-box;
   }
-
   body {
     margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
     color: #fff;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
   }
-
-  .hero {
-    background: url('https://images.pexels.com/photos/1117132/pexels-photo-1117132.jpeg?auto=compress&cs=tinysrgb&h=650&w=940') no-repeat center center/cover;
-    padding: 100px 20px 120px;
-    text-align: center;
-    position: relative;
+  h1 {
+    margin: 0 0 0.5rem 0;
+    font-weight: 700;
   }
-
-  .hero::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 0;
+  p {
+    margin: 0 0 2rem 0;
+    color: #ccc;
   }
-
-  .hero-content {
-    position: relative;
-    z-index: 1;
-    max-width: 700px;
-    margin: 0 auto;
+  .container {
+    width: 100%;
+    max-width: 350px;
+    background: #1e1e1e;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.7);
   }
-
-  .hero h1 {
-    font-weight: 600;
-    font-size: 3.2rem;
-    margin: 0 0 20px;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-  }
-
-  .hero p {
-    font-weight: 300;
-    font-size: 1.25rem;
-    margin-bottom: 40px;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
-  }
-
-  .upload-section {
-    background: #fff;
-    color: #333;
-    max-width: 600px;
-    margin: -80px auto 40px;
-    padding: 35px 25px 40px;
-    border-radius: 15px;
-    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-    text-align: center;
-  }
-
-  .upload-section h2 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-weight: 600;
-  }
-
-  .upload-label {
-    display: inline-block;
-    padding: 14px 30px;
-    background: #667eea;
-    color: #fff;
-    font-weight: 600;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    user-select: none;
-  }
-
-  .upload-label:hover {
-    background: #5a67d8;
-  }
-
   input[type="file"] {
-    display: none;
+    width: 100%;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    background: #2a2a2a;
+    border: none;
+    color: #eee;
+    padding: 0.5rem;
+    border-radius: 6px;
   }
-
-  .preview-container {
-    margin-top: 30px;
-    text-align: left;
-  }
-
-  .preview-label {
-    font-weight: 600;
-    margin-bottom: 10px;
-  }
-
-  #previewImage,
-  #previewVideo {
-    max-width: 100%;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-    display: none;
-    margin-bottom: 20px;
-  }
-
-  #upgradedCanvas {
-    max-width: 100%;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-    display: none;
-    margin-bottom: 20px;
-  }
-
-  .btn-upgrade {
-    background: #764ba2;
+  button {
+    width: 100%;
+    background: #0f62fe;
     border: none;
     color: white;
+    padding: 0.75rem;
+    font-size: 1rem;
     font-weight: 600;
-    padding: 14px 40px;
-    border-radius: 50px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 1rem;
     transition: background-color 0.3s ease;
-    user-select: none;
+    margin-bottom: 1rem;
   }
-
-  .btn-upgrade:disabled {
-    background: #ccc;
+  button:disabled {
+    background: #555;
     cursor: not-allowed;
-    color: #666;
   }
-
-  .btn-upgrade:hover:not(:disabled) {
-    background: #5b3a7e;
+  button:hover:not(:disabled) {
+    background: #0353e9;
   }
-
-  .result-text {
-    font-weight: 500;
-    font-size: 1rem;
-    color: #444;
-    margin-top: 15px;
-    min-height: 1.5em;
+  .images-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
-
-  footer {
+  @media (min-width: 480px) {
+    .images-wrapper {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+  .image-container {
+    flex: 1;
     text-align: center;
-    padding: 20px;
-    font-size: 0.9rem;
-    color: #ccc;
-    margin-top: auto;
   }
-
-  /* Responsive */
-  @media (max-width: 480px) {
-    .hero {
-      padding: 80px 15px 100px;
-    }
-    .hero h1 {
-      font-size: 2.2rem;
-    }
-    .hero p {
-      font-size: 1rem;
-    }
-    .upload-section {
-      margin: -60px 15px 30px;
-      padding: 25px 15px 30px;
-    }
+  .image-container > h2 {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: #f0f0f0;
+  }
+  img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #333;
+  }
+  .download-btn {
+    background: #00b894;
+    margin-top: 0.5rem;
+  }
+  .footer {
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: #555;
+    text-align: center;
+    max-width: 350px;
+  }
+  .loading {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: #0f62fe;
   }
 </style>
 </head>
 <body>
-  <section class="hero" role="banner">
-    <div class="hero-content">
-      <h1>Photo & Video Resolution Upgrader</h1>
-      <p>Enhance your images and videos instantly with our sleek resolution upgrader tool. Experience sharper visuals right in your browser, no upload or backend needed!</p>
-    </div>
-  </section>
-
-  <section class="upload-section" role="main" aria-label="Upload and upgrade resolution">
-    <h2>Upload Your Photo or Video</h2>
-    <label class="upload-label" for="fileInput" tabindex="0">Choose File</label>
-    <input type="file" id="fileInput" accept="image/*,video/*" />
-
-    <div class="preview-container" aria-live="polite" aria-atomic="true">
-      <div id="imageSection">
-        <div class="preview-label">Original Image Preview</div>
-        <img id="previewImage" alt="Original uploaded image preview" />
+  <h1>Photo Quality Enhancer</h1>
+  <p>Upload your photo and enhance quality up to 4x with AI-powered upscaling</p>
+  <div class="container">
+    <input type="file" accept="image/*" id="fileInput" />
+    <button id="upscaleBtn" disabled>Enhance Quality ×4</button>
+    <div class="loading" id="loading" style="display:none;">Enhancing image, please wait...</div>
+    <div class="images-wrapper" style="display:none;" id="imagesWrapper">
+      <div class="image-container">
+        <h2>Original Image</h2>
+        <img id="originalImage" alt="Original preview" />
       </div>
-
-      <div id="videoSection">
-        <div class="preview-label">Original Video Preview</div>
-        <video id="previewVideo" controls playsinline></video>
+      <div class="image-container">
+        <h2>Enhanced Image</h2>
+        <img id="enhancedImage" alt="Enhanced preview" />
+        <button class="download-btn" id="downloadBtn" style="display:none;">Download Enhanced</button>
       </div>
-
-      <canvas id="upgradedCanvas" aria-label="Upgraded resolution preview"></canvas>
-
-      <button class="btn-upgrade" id="upgradeBtn" disabled>Upgrade Resolution</button>
-      <div class="result-text" id="resultText" aria-live="polite"></div>
     </div>
-  </section>
+  </div>
+  <div class="footer">
+    &copy; 2024 Photo Quality Enhancer - Powered by UpscalerJS and TensorFlow.js
+  </div>
 
-<script>
-(() => {
-  const fileInput = document.getElementById('fileInput');
-  const previewImage = document.getElementById('previewImage');
-  const previewVideo = document.getElementById('previewVideo');
-  const upgradedCanvas = document.getElementById('upgradedCanvas');
-  const upgradeBtn = document.getElementById('upgradeBtn');
-  const resultText = document.getElementById('resultText');
+  <!-- UpscalerJS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/upscaler@2.1.0/dist/upscaler.min.js"></script>
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const upscaleBtn = document.getElementById('upscaleBtn');
+    const originalImage = document.getElementById('originalImage');
+    const enhancedImage = document.getElementById('enhancedImage');
+    const imagesWrapper = document.getElementById('imagesWrapper');
+    const loadingText = document.getElementById('loading');
+    const downloadBtn = document.getElementById('downloadBtn');
 
-  let currentFile = null;
-  let currentType = null; // 'image' or 'video'
+    let currentFile = null;
+    let upscaledBlobUrl = null;
 
-  function resetPreview() {
-    previewImage.style.display = 'none';
-    previewImage.src = '';
-    previewVideo.style.display = 'none';
-    previewVideo.src = '';
-    upgradedCanvas.style.display = 'none';
-    const ctx = upgradedCanvas.getContext('2d');
-    ctx.clearRect(0, 0, upgradedCanvas.width, upgradedCanvas.height);
-    resultText.textContent = '';
-    upgradeBtn.disabled = true;
-  }
+    // Handle file input
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      if (!file) {
+        upscaleBtn.disabled = true;
+        imagesWrapper.style.display = 'none';
+        return;
+      }
+      currentFile = file;
+      const url = URL.createObjectURL(file);
+      originalImage.src = url;
+      imagesWrapper.style.display = 'flex';
+      enhancedImage.src = '';
+      downloadBtn.style.display = 'none';
+      upscaleBtn.disabled = false;
+    });
 
-  function displayImage(file) {
-    const url = URL.createObjectURL(file);
-    previewImage.src = url;
-    previewImage.style.display = 'block';
-    previewVideo.style.display = 'none';
-    upgradedCanvas.style.display = 'none';
-    upgradeBtn.disabled = false;
-    resultText.textContent = '';
-  }
+    // Handle upscale
+    upscaleBtn.addEventListener('click', async () => {
+      if (!currentFile) return;
+      upscaleBtn.disabled = true;
+      loadingText.style.display = 'block';
+      enhancedImage.src = '';
+      downloadBtn.style.display = 'none';
 
-  function displayVideo(file) {
-    const url = URL.createObjectURL(file);
-    previewVideo.src = url;
-    previewVideo.style.display = 'block';
-    previewVideo.load();
-    previewImage.style.display = 'none';
-    upgradedCanvas.style.display = 'none';
-    upgradeBtn.disabled = false;
-    resultText.textContent = '';
-  }
+      try {
+        // Load image to Image element
+        const img = new Image();
+        img.src = URL.createObjectURL(currentFile);
 
-  function upscaleImage(img, scaleFactor = 2) {
-    const canvas = upgradedCanvas;
-    const ctx = canvas.getContext('2d');
-    canvas.width = img.naturalWidth * scaleFactor;
-    canvas.height = img.naturalHeight * scaleFactor;
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+        });
 
-    // Use 'imageSmoothingEnabled' to smooth upscale
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
+        // Create an Upscaler instance with x4 scale
+        const upscaler = new window.Upscaler({
+          scale: 4,
+          model: 'esrgan', // Use ESRGAN model for best results
+        });
 
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    canvas.style.display = 'block';
-  }
+        // Run upscaling
+        const output = await upscaler.upscale(img);
 
-  function simulateVideoUpgrade() {
-    // For video, we simulate upgrade by showing a message
-    upgradedCanvas.style.display = 'none';
-    resultText.textContent = 'Video resolution upscaling is a complex task and requires backend processing. This tool simulates the upgrade visually by playing the video full size.';
-  }
+        // Convert canvas output to blob
+        const blob = await new Promise(resolve => output.canvas.toBlob(resolve, 'image/png'));
 
-  fileInput.addEventListener('change', (e) => {
-    resetPreview();
-    const file = e.target.files[0];
-    if (!file) {
-      currentFile = null;
-      currentType = null;
-      return;
-    }
-    currentFile = file;
-    if (file.type.startsWith('image/')) {
-      currentType = 'image';
-      displayImage(file);
-    } else if (file.type.startsWith('video/')) {
-      currentType = 'video';
-      displayVideo(file);
-    } else {
-      currentType = null;
-      resultText.textContent = 'Unsupported file type. Please upload an image or video.';
-      upgradeBtn.disabled = true;
-    }
-  });
+        if (upscaledBlobUrl) {
+          URL.revokeObjectURL(upscaledBlobUrl);
+        }
+        upscaledBlobUrl = URL.createObjectURL(blob);
+        enhancedImage.src = upscaledBlobUrl;
 
-  upgradeBtn.addEventListener('click', () => {
-    if (!currentFile) return;
-    if (currentType === 'image') {
-      // Upscale the image by 2x using Canvas
-      const img = new Image();
-      img.onload = () => {
-        upscaleImage(img);
-        resultText.textContent = 'Resolution upgraded by 2x (simulated using canvas). Download manually if you want.';
-      };
-      img.onerror = () => {
-        resultText.textContent = 'Failed to load the image for processing.';
-      };
-      img.src = URL.createObjectURL(currentFile);
-    } else if (currentType === 'video') {
-      simulateVideoUpgrade();
-    } else {
-      resultText.textContent = 'Unsupported file type.';
-    }
-  });
+        // Show download button
+        downloadBtn.style.display = 'block';
+        loadingText.style.display = 'none';
+      } catch (error) {
+        loadingText.style.display = 'none';
+        upscaleBtn.disabled = false;
+        alert('Error during upscaling: ' + error.message);
+      }
+    });
 
-  // Accessibility: Allow keyboard usage on label
-  document.querySelector('.upload-label').addEventListener('keydown', (e) => {
-    if(e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      fileInput.click();
-    }
-  });
-})();
-</script>
-<footer>
-  &copy; 2024 Photo & Video Resolution Upgrader. All rights reserved.
-</footer>
+    // Download enhanced image
+    downloadBtn.addEventListener('click', () => {
+      if (!upscaledBlobUrl) return;
+      const a = document.createElement('a');
+      a.href = upscaledBlobUrl;
+      a.download = 'enhanced-image.png';
+      a.click();
+    });
+
+  </script>
 </body>
 </html>
